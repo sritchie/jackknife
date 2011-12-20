@@ -16,10 +16,10 @@
        `(assert ~x))))
 
 (defn sleep
-  "Sleeps for the supplied length of time. Negative numbers are
+  "Sleeps for the supplied length of time. Negative numbers (and nil) are
   treated as zero."
   [len]
-  (when (pos? len)
+  (when (and len (pos? len))
     (Thread/sleep len)))
 
 (defn register-shutdown-hook [shutdown-func]
