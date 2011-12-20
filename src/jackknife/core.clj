@@ -29,6 +29,9 @@
 (defmacro dofor [bindings & body]
   `(doall (for ~bindings (do ~@body))))
 
+(defn future-values [futures]
+  (dofor [f futures] (.get f)))
+
 (defmacro p-dofor [bindings & body]
   `(let [futures# (dofor ~bindings
                          (future ~@body))]
