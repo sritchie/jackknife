@@ -41,7 +41,7 @@
 (defn do-pmap [fn & colls]
   (doall (apply pmap fn colls)))
 
-(defn update-vals [f m]
+(defn update-vals [m f]
   (into {} (for [[k v] m]
              [k (f k v)])))
 
