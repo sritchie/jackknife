@@ -6,7 +6,7 @@ Clojure tools used in Cascalog, ElephantDB, Storm and others.
 
 Include the following in your `project.clj`:
 
-    [jackknife "0.1.0"]
+    [jackknife "0.1.1"]
 
 ## License
 
