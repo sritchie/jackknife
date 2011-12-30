@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html><head><link href="css/default.css" rel="stylesheet" type="text/css"><script src="js/jquery.min.js" type="text/javascript"></script><script src="js/page_effects.js" type="text/javascript"></script><title>jackknife.def documentation</title></head><body><div id="header"><h1><a href="index.html">Jackknife 0.1.1 API documentation</a></h1></div><div class="sidebar" id="namespaces"><h3>Namespaces</h3><ul><li><a href="jackknife.core.html">jackknife.core</a></li><li class="current"><a href="jackknife.def.html">jackknife.def</a></li><li><a href="jackknife.logging.html">jackknife.logging</a></li><li><a href="jackknife.seq.html">jackknife.seq</a></li></ul></div><div class="sidebar" id="vars"><h3>Public Vars</h3><ul><li><a href="jackknife.def.html#var-defalias">defalias</a></li><li><a href="jackknife.def.html#var-defnk">defnk</a></li></ul></div><div class="namespace-docs" id="content"><h2>jackknife.def documentation</h2><pre class="doc"></pre><div class="public" id="var-defalias"><h3>defalias</h3><div class="usage"><code>(defalias name orig)</code><code>(defalias name orig doc)</code></div><pre class="doc">Defines an alias for a var: a new var with the same root binding (if
+any) and similar metadata. The metadata of the alias is its initial
+metadata (as provided by def) merged into the metadata of the original.</pre></div><div class="public" id="var-defnk"><h3>defnk</h3><div class="usage"><code>(defnk fn-name &amp; fn-tail)</code></div><pre class="doc">Define a function accepting keyword arguments. Symbols up to the first
+keyword in the parameter list are taken as positional arguments.  Then
+an alternating sequence of keywords and defaults values is expected. The
+values of the keyword arguments are available in the function body by
+virtue of the symbol corresponding to the keyword (cf. :keys destructuring).
+defnk accepts an optional docstring as well as an optional metadata map.</pre></div></div></body></html>
