@@ -1,4 +1,4 @@
-(defproject jackknife "0.1.0"
+(defproject jackknife "0.1.1"
   :description "Useful clojure utilities."
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [org.clojure/tools.logging "0.2.3"]

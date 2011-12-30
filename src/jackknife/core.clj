@@ -2,18 +2,19 @@
   (:import [java.net InetAddress]
            [java.util.concurrent.locks ReentrantReadWriteLock]))
 
-(defn >=s
-  ">= for strings."
-  [s1 s2]
-  (= s2 (first (sort [s1 s2]))))
-
 (defmacro safe-assert
-  "TODO: Fix my version comparison."
-  ([x] `(safe-assert ~x ""))
-  ([x msg]
-     (if (>=s (clojure-version) "1.3.0")
-       `(assert ~x ~msg)
-       `(assert ~x))))
+  "Evaluates expr and throws an exception if it does not evaluate to
+  logical true."
+  ([x]
+     (when *assert*
+       `(when-not ~x
+          (throw (new AssertionError
+                      (str "Assert failed: " (pr-str '~x)))))))
+  ([x message]
+     (when *assert*
+       `(when-not ~x
+          (throw (new AssertionError
+                      (str "Assert failed: " ~message "\n" (pr-str '~x))))))))
 
 (defn sleep
   "Sleeps for the supplied length of time. Negative numbers (and nil) are
