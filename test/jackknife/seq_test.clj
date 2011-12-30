@@ -29,8 +29,11 @@
  '(1 2 3)    '(1 2 3)
  [5 5]       [5 5]
  "aaa"       ["aaa"]
- {:a 1 :b 2} [{:a 1 :b 2}]
- #{1 2 3}    [#{1 2 3}])
+ {:a 1 :b 2} [{:a 1 :b 2}])
+
+(future-fact
+ "Sets should be immune to collectify."
+ (collectify #{1 2 3}) => [#{1 2 3}])
 
 (tabular
  (fact "Unweave testing."
