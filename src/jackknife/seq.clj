@@ -64,7 +64,7 @@
 
 (defn collectify [obj]
   (if (or (sequential? obj)
-          (instance? Collection obj))
+          (instance? java.util.List obj))
     obj, [obj]))
 
 (defn unweave
