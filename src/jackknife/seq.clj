@@ -1,7 +1,7 @@
 (ns jackknife.seq
   (:use [jackknife.core :only (safe-assert)]
         [clojure.set :only (difference)])
-  (:import [java.util Collection]))
+  (:import [java.util List]))
 
 (defn repeat-seq
   [amt aseq]
