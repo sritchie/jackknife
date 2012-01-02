@@ -29,11 +29,8 @@
  '(1 2 3)    '(1 2 3)
  [5 5]       [5 5]
  "aaa"       ["aaa"]
- {:a 1 :b 2} [{:a 1 :b 2}])
-
-(future-fact
- "Sets should be immune to collectify."
- (collectify #{1 2 3}) => [#{1 2 3}])
+ {:a 1 :b 2} [{:a 1 :b 2}]
+ #{1 2 3}    [#{1 2 3}])
 
 (tabular
  (fact "Unweave testing."
@@ -52,7 +49,3 @@
  [1 2 2 1 3]         [1 2]
  (range 4)           []
  [1 "face" 2 "face"] ["face"])
-
-(fact "update-vals test."
-  (letfn [(square [k v] (* v v))]
-    (update-vals {1 1, 2 2, 3 3} square) => {1 1, 2 4, 3 9}))
