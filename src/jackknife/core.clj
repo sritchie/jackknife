@@ -31,7 +31,8 @@
   `(doall (for ~bindings (do ~@body))))
 
 (defn future-values [futures]
-  (dofor [f futures] (.get f)))
+  (dofor [^java.util.concurrent.Future f futures]
+         (.get f)))
 
 (defmacro p-dofor [bindings & body]
   `(let [futures# (dofor ~bindings
@@ -77,24 +78,27 @@
 (defn mk-rw-lock []
   (ReentrantReadWriteLock.))
 
-(defmacro with-read-lock [rw-lock & body]
-  `(let [rlock# (.readLock ~rw-lock)]
-     (try
-       (.lock rlock#)
-       ~@body
-       (finally (.unlock rlock#)))))
+(defmacro with-read-lock
+  [rw-lock & body]
+  (let [lock (with-meta rw-lock {:tag `ReentrantReadWriteLock})]
+    `(let [rlock# (.readLock ~lock)]
+       (try (.lock rlock#)
+            ~@body
+            (finally (.unlock rlock#))))))
 
 (defmacro with-write-lock [rw-lock & body]
-  `(let [wlock# (.writeLock ~rw-lock)]
-     (try
-       (.lock wlock#)
-       ~@body
-       (finally (.unlock wlock#)))))
+  (let [lock (with-meta rw-lock {:tag `ReentrantReadWriteLock})]
+    `(let [wlock# (.writeLock ~lock)]
+       (try (.lock wlock#)
+            ~@body
+            (finally (.unlock wlock#))))))
 
 ;; ## Error Handlers
 
 (defn throw-illegal [& xs]
-  (throw (IllegalArgumentException. (apply str xs))))
+  (throw
+   (IllegalArgumentException. ^String (apply str xs))))
 
 (defn throw-runtime [& xs]
-  (throw (RuntimeException. (apply str xs))))
+  (throw
+   (RuntimeException. ^String (apply str xs))))
