@@ -1,6 +1,10 @@
 (ns jackknife.core
   (:import [java.net InetAddress]
+           [java.util UUID]
            [java.util.concurrent.locks ReentrantReadWriteLock]))
+
+(defn uuid []
+  (str (UUID/randomUUID)))
 
 (defmacro safe-assert
   "Evaluates expr and throws an exception if it does not evaluate to
