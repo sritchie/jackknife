@@ -3,8 +3,58 @@
            [java.util UUID]
            [java.util.concurrent.locks ReentrantReadWriteLock]))
 
+(defn ^String path
+  [x]
+  (if (string? x)
+    x
+    (.getAbsolutePath ^java.io.File x)))
+
+(defmacro with-timeout
+  "Accepts a vector with a timeout (in ms) and any number of forms and
+  executes those forms sequentially. returns the result of the last
+  form or nil (if the timeout is reached.) For example:
+
+  (with-timeout [100]
+    (Thread/sleep 50)
+    \"done!\")
+  ;;=> \"done!\"
+
+  (with-timeout [100]
+    (Thread/sleep 200)
+    \"done!\")
+  ;;=> nil"
+  [[ms] & body]
+  `(let [^java.util.concurrent.Future f# (future ~@body)]
+     (try (.get f# ~ms java.util.concurrent.TimeUnit/MILLISECONDS)
+          (catch java.util.concurrent.TimeoutException e#
+            (.cancel f# true)
+            nil))))
+
+(defn memoize
+  "Similar to clojure.core/memoize, but allows for an optional
+  initialization map."
+  {:static true}
+  ([f] (memoize f {}))
+  ([f init-m]
+     (let [mem (atom init-m)]
+       (fn [& args]
+         (if-let [e (find @mem args)]
+           (val e)
+           (let [ret (apply f args)]
+             (swap! mem assoc args ret)
+             ret))))))
+
+(defn multifn? [op]
+  (instance? clojure.lang.MultiFn op))
+
 (defn uuid []
   (str (UUID/randomUUID)))
+
+(defn unique-rooted-paths
+  "Returns an infinite* sequence of unique subpaths of the supplied
+  root path."
+  [root]
+  (repeatedly #(str root "/" (uuid))))
 
 (defmacro safe-assert
   "Evaluates expr and throws an exception if it does not evaluate to

@@ -1,7 +1,45 @@
 (ns jackknife.seq
+  (:refer-clojure :exclude [flatten memoize])
   (:use [jackknife.core :only (safe-assert)]
         [clojure.set :only (difference)])
+  (:require [clojure.walk :refer (postwalk)])
   (:import [java.util List]))
+
+(defn all-pairs
+  "[1 2 3] -> [[1 2] [1 3] [2 3]]"
+  [coll]
+  (let [pair-up (fn [v vals]
+                  (map (partial vector v) vals))]
+    (apply concat (for [i (range (dec (count coll)))]
+                    (pair-up (nth coll i) (drop (inc i) coll))))))
+
+(defn multi-set
+  "Returns a map of elem to count"
+  [aseq]
+  (apply merge-with +
+         (map #(hash-map % 1) aseq)))
+
+(defn reverse-map
+  "{:a 1 :b 1 :c 2} -> {1 [:a :b] 2 :c}"
+  [amap]
+  (reduce (fn [m [k v]]
+            (let [existing (get m v [])]
+              (assoc m v (conj existing k))))
+          {} amap))
+
+(defn count= [& args]
+  (apply = (map count args)))
+
+(def not-count=
+  (complement count=))
+
+(defn flatten
+  "Flattens out a nested sequence. unlike clojure.core/flatten, also
+  flattens maps."
+  [vars]
+  (->> vars
+       (postwalk #(if (map? %) (seq %) %))
+       (clojure.core/flatten)))
 
 (defn repeat-seq
   [amt aseq]
@@ -89,3 +127,28 @@
 
 (defn some? [pred coll]
   ((complement nil?) (some pred coll)))
+
+(letfn [(clean-nil-bindings [bindings]
+          (let [pairs (partition 2 bindings)]
+            (mapcat identity (filter #(first %) pairs))))]
+
+  (defn mk-destructured-seq-map
+    "Accepts pairs of bindings and generates a map of replacements to
+     make... TODO: More docs."
+    [& bindings]
+    ;; lhs needs to be symbolified
+    (let [bindings (clean-nil-bindings bindings)
+          to-sym (fn [s] (if (keyword? s) s (symbol s)))
+          [lhs rhs] (unweave bindings)
+          lhs (for [l lhs] (if (sequential? l)
+                             (vec (map to-sym l))
+                             (symbol l)))
+          rhs (for [r rhs] (if (sequential? r)
+                             (vec r)
+                             r))
+          destructured (vec (destructure (interleave lhs rhs)))
+          syms (first (unweave destructured))
+          extract-code (vec (for [s syms] [(str s) s]))]
+      (eval
+       `(let ~destructured
+          (into {} ~extract-code))))))
