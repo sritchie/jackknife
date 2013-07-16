@@ -1,4 +1,5 @@
 (ns jackknife.core
+  (:refer-clojure :exclude [memoize])
   (:import [java.net InetAddress]
            [java.util UUID]
            [java.util.concurrent.locks ReentrantReadWriteLock]))

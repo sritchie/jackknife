@@ -1,5 +1,23 @@
 (ns jackknife.def
-  (:use [clojure.tools.macro :only (name-with-attributes)]))
+  (:require [clojure.tools.macro :refer (name-with-attributes)]
+            [jackknife.meta :refer (meta-conj)]))
+
+(defmacro defmain
+  "Defines an AOT-compiled function with the supplied
+  `name`. Containing namespace must be marked for AOT compilation to
+  have any effect."
+  [name & forms]
+  (let [classname (namespace-munge (str *ns* "." name))
+        sym (with-meta
+              (symbol (str name "-main"))
+              (meta name))]
+    `(do (gen-class :name ~classname
+                    :main true
+                    :prefix ~(str name "-"))
+         (defn ~(meta-conj sym {:no-doc true
+                                :skip-wiki true})
+           ~@forms)
+         (defn ~name ~@forms))))
 
 (defmacro defalias
   "Defines an alias for a var: a new var with the same root binding (if

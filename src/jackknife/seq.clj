@@ -1,5 +1,5 @@
 (ns jackknife.seq
-  (:refer-clojure :exclude [flatten memoize])
+  (:refer-clojure :exclude [flatten])
   (:use [jackknife.core :only (safe-assert)]
         [clojure.set :only (difference)])
   (:require [clojure.walk :refer (postwalk)])
