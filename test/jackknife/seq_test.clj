@@ -40,8 +40,8 @@
  []               [[] []]
  [1 2 3 4 5 6]    [[1 3 5] [2 4 6]]
  ["a" 99 "q" "c"] [["a" "q"] [99 "c"]]
- ["a" "b" "c"] (throws AssertionError)
- [100]         (throws AssertionError))
+ ["a" "b" "c"] [["a" "c"] ["b"]]
+ [100]         [[100] []])
 
 (tabular
  (fact "duplicates test."
