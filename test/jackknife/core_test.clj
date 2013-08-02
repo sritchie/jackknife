@@ -1,4 +1,5 @@
 (ns jackknife.core-test
+  (:refer-clojure :exclude [memoize])
   (:use jackknife.core
         midje.sweet))
 

@@ -1,17 +1,15 @@
 (ns jackknife.seq
-  (:refer-clojure :exclude [flatten memoize])
+  (:refer-clojure :exclude [flatten])
   (:use [jackknife.core :only (safe-assert)]
         [clojure.set :only (difference)])
-  (:require [clojure.walk :refer (postwalk)])
+  (:require [clojure.math.combinatorics :refer (combinations)]
+            [clojure.walk :refer (postwalk)])
   (:import [java.util List]))
 
 (defn all-pairs
   "[1 2 3] -> [[1 2] [1 3] [2 3]]"
   [coll]
-  (let [pair-up (fn [v vals]
-                  (map (partial vector v) vals))]
-    (apply concat (for [i (range (dec (count coll)))]
-                    (pair-up (nth coll i) (drop (inc i) coll))))))
+  (or (combinations coll 2) []))
 
 (defn multi-set
   "Returns a map of elem to count"
@@ -101,15 +99,21 @@
           (drop (inc idx) coll)))
 
 (defn collectify [obj]
-  (if (or (sequential? obj)
-          (instance? List obj))
-    obj, [obj]))
+  (cond (nil? obj) []
+        (or (sequential? obj) (instance? List obj)) obj
+        :else [obj]))
 
 (defn unweave
   "[1 2 3 4 5 6] -> [[1 3 5] [2 4 6]]"
   [coll]
-  {:pre [(even? (count coll))]}
   [(take-nth 2 coll) (take-nth 2 (rest coll))])
+
+(defn to-map
+  "Accepts a sequence of alternating [single-k, many-values] pairs and
+  returns a map of k -> vals."
+  [k? elems]
+  (let [[keys vals] (unweave (partition-by k? elems))]
+    (zipmap (map first keys) vals)))
 
 (defn duplicates
   "Returns a vector of all values for which duplicates appear in the
