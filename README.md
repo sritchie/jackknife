@@ -6,4 +6,4 @@ Clojure tools used in Cascalog, ElephantDB, Storm and others.
 
 Include the following in your `project.clj`:
 
-    [jackknife "0.1.4-SNAPSHOT"]
+    [jackknife "0.1.6"]
