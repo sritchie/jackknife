@@ -37,15 +37,25 @@
   separate
   (juxt filter remove))
 
+;; (defn flatten
+;;   "Flattens out a nested sequence. unlike clojure.core/flatten, also
+;;   flattens maps."
+;;   [vars]
+;;   (let [[records others] (separate #(instance? clojure.lang.IRecord %) vars)]
+;;     (->> others
+;;          (postwalk #(if (map? %) (seq %) %))
+;;          (clojure.core/flatten)
+;;          (concat records))))
+
 (defn flatten
   "Flattens out a nested sequence. unlike clojure.core/flatten, also
   flattens maps."
   [vars]
-  (let [[records others] (separate #(instance? clojure.lang.IRecord %) vars)]
-    (->> others
-         (postwalk #(if (map? %) (seq %) %))
-         (clojure.core/flatten)
-         (concat records))))
+  (if (and (seq? vars) (every? #(instance? clojure.lang.IRecord %) vars))
+    vars
+    (->> vars
+               (postwalk #(if (map? %) (seq %) %))
+               (clojure.core/flatten))))
 
 (defn repeat-seq
   [amt aseq]
