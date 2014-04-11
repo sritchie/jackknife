@@ -1,5 +1,5 @@
 (ns jackknife.seq
-  (:refer-clojure :exclude [flatten])
+  (:refer-clojure :exclude [flatten some?])
   (:use [jackknife.core :only (safe-assert)]
         [clojure.set :only (difference)])
   (:require [clojure.math.combinatorics :refer (combinations)]
