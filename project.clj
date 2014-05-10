@@ -1,6 +1,6 @@
-(defproject jackknife "0.1.6"
+(defproject jackknife "0.1.7"
   :description "Useful clojure utilities."
-  :dependencies [[org.clojure/clojure "1.5.1"]
+  :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/tools.logging "0.2.6"]
                  [org.clojure/tools.macro "0.1.2"]
                  [org.clojure/math.combinatorics "0.0.4"]
