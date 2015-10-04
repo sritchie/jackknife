@@ -1,5 +1,5 @@
 (ns jackknife.seq-test
-  (:refer-clojure :exclude [flatten])
+  (:refer-clojure :exclude [flatten some?])
   (:use jackknife.seq
         midje.sweet))
 
